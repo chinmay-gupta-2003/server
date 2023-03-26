@@ -8,7 +8,7 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-dotenv.config({ path: './config.env' });
+dotenv.config();
 
 mongoose
   .connect(process.env.DATABASE_LOCAL, {
@@ -18,7 +18,7 @@ mongoose
   .then(() => console.log('DB connection successful!'))
   .catch((err) => console.log(err));
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 const server = app.listen(port, () => {
   console.log(`Listening to port ${port}`);
 });
