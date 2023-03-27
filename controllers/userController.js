@@ -35,10 +35,38 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-exports.searchInterest = async (req, res, next) => {
+exports.searchByInterest = async (req, res, next) => {
   try {
     const type = req.query.type;
     const users = await User.find({ interest: type });
+
+    if (!users.length) {
+      res.status(200).json({
+        message: 'No user found!',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      result: users.length,
+      data: {
+        users,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+exports.searchByUserName = async (req, res, next) => {
+  try {
+    const { username } = req.params;
+    console.log(username);
+
+    const users = await User.find({ userName: username });
 
     if (!users.length) {
       res.status(200).json({
