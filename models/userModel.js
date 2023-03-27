@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
     validate: [validator.isEmail, 'Please provide a valid email'],
   },
   photo: String,
+  interest: Array,
 });
 
 const User = mongoose.model('User', userSchema);
