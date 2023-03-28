@@ -19,7 +19,17 @@ exports.createUser = async (req, res) => {
 
 exports.editProfile = async (req,res)=>{
   try{
-    
+    const user = await User.findByIdAndUpdate(
+      {_id: req.params.id},
+      {$set: req.body},
+      {new: true}
+    );
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user,
+      },
+    });
   }
   catch(err){
     res.status(400).json({
