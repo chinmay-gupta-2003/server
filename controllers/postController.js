@@ -1,4 +1,5 @@
 const postModel = require("../models/postModel.js");
+const mongoose = require('mongoose');
 
 exports.addPost = async (req,res)=>{
     try{
@@ -17,18 +18,19 @@ exports.addPost = async (req,res)=>{
         });
       }
 }
-
 exports.editPost = async (req, res) => {
     try {
-      const post = await postModel.find({ userId: req.params.userId });
+      console.log(req.params.id)
+      const post = await postModel.find({ _id:req.params.id });
       if (!post) {
         return res.status(404).json({
           status: 'fail',
           message: 'Post not found',
         });
       }
+      console.log(post[0]);
       const updatedPost = await postModel.findOneAndUpdate(
-        { userId: req.params.userId },
+        { _id: req.params.id },
         { $set: req.body },
         { new: true }
       );
@@ -46,4 +48,3 @@ exports.editPost = async (req, res) => {
       });
     }
   };
-  

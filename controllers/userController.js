@@ -17,6 +17,18 @@ exports.createUser = async (req, res) => {
   }
 };
 
+exports.editProfile = async (req,res)=>{
+  try{
+    
+  }
+  catch(err){
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+}
+
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
