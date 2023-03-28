@@ -100,3 +100,37 @@ exports.searchByUserName = async (req, res, next) => {
     });
   }
 };
+
+// Friends
+
+exports.addRemoveFriend = async (req, res, next) => {
+  try {
+    const { id, friendId } = req.params;
+    let frnd=true;
+    const user = await User.findById(id);
+    const friend = await User.findById(friendId);
+
+    if (user.friends.includes(friendId)) {
+      user.friends = user.friends.filter((id) => id !== friendId);
+      friend.friends = friend.friends.filter((id) => id !== id);
+      frnd=false;
+    } else {
+      user.friends.push(friendId);
+      friend.friends.push(id);
+      frnd=true
+    }
+    await user.save();
+    await friend.save();
+    const msgg=frnd?"Friends added successfully":"Friends Removed Succesfully"
+
+    res.status(200).json(
+      {msgg}
+    );
+
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
