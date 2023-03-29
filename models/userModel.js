@@ -24,6 +24,14 @@ const userSchema = new mongoose.Schema({
   },
   photo: String,
   interest: Array,
+  location: {
+    type: {
+      type: String,
+      default: 'Point',
+      enum: ['Point'],
+    },
+    coordinates: [Number],
+  },
 });
 
 const User = mongoose.model('User', userSchema);
