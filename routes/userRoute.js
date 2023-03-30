@@ -5,7 +5,7 @@ const {
   searchByInterest,
   searchByUserName,
   editProfile,
-  addRemoveFriend
+  addRemoveFriend,
   matchUserWithinRange,
 } = require('../controllers/userController');
 const router = express.Router();
