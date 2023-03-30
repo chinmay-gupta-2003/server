@@ -183,6 +183,7 @@ exports.matchUserWithinRange = async (req, res) => {
         { interest: filterInterest(req) },
         queryObject
       );
+
     const users = await User.find(queryObject);
 
     res.status(200).json({
