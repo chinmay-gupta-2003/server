@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const express = require('express');
 const app = express();
 
-app.use("/uploads", express.static("uploads"));
+app.use('/uploads', express.static('uploads'));
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10kb' }));
 
