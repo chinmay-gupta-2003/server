@@ -1,23 +1,50 @@
 const postModel = require("../models/postModel.js");
+const mongoose = require('mongoose');
 
- const addPost = async (req,res,next)=>{
-    console.log('Hi');
-    console.log(req.file);
-    const newPost = new postModel(req.body);
-    console.log(newPost);
-    newPost.image = req.file.path;
-    console.log(newPost);
-    if(!req.body.userId || !req.body.date){
-        res.status(400).json({message:"Please fill all the fields"});
-    }
+exports.addPost = async (req,res)=>{
     try{
-        const savePost = await newPost.save();
-        console.log(savePost);
-        res.status(200).json(savePost);
+      const newPost = await postModel.create({...req.body,image: req.file.path});
+      res.status(201).json({
+        status: 'success',
+        data: {
+        post: newPost,
+        },
+    }); 
     }
-    catch(err){
-        next(err);
-    }
+    catch (err) {
+        res.status(400).json({
+          status: 'fail',
+          message: err.message,
+        });
+      }
 }
-
-module.exports = {addPost};
+exports.editPost = async (req, res) => {
+    try {
+      console.log(req.params.id)
+      const post = await postModel.find({ _id:req.params.id });
+      if (!post) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Post not found',
+        });
+      }
+      console.log(post[0]);
+      const updatedPost = await postModel.findOneAndUpdate(
+        { _id: req.params.id },
+        { $set: req.body },
+        { new: true }
+      );
+      console.log(updatedPost);
+      res.status(200).json({
+        status: 'success',
+        data: {
+          post: updatedPost,
+        },
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: 'fail',
+        message: err.message,
+      });
+    }
+  };

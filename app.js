@@ -9,7 +9,7 @@ app.use("/uploads", express.static("uploads"));
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10kb' }));
 
-app.use('/api/users', userRouter);
-app.use('/api/posts', postRouter);
+app.use('/api/users/', userRouter);
+app.use('/api/posts/', postRouter);
 
 module.exports = app;
