@@ -1,5 +1,23 @@
 const User = require('../models/userModel');
 
+const filterInterest = (req) => {
+  let typeArray, interestObject;
+
+  if (req.query.type.includes(',')) {
+    typeArray = req.query.type.split(',');
+    interestObject = {
+      $in: typeArray,
+    };
+  } else if (req.query.type.includes('$')) {
+    typeArray = req.query.type.split('$');
+    interestObject = {
+      $all: typeArray,
+    };
+  } else interestObject = req.query.type;
+
+  return interestObject;
+};
+
 exports.createUser = async (req, res) => {
   try {
     const newUser = await User.create(req.body);
@@ -37,8 +55,7 @@ exports.getAllUsers = async (req, res) => {
 
 exports.searchByInterest = async (req, res, next) => {
   try {
-    const type = req.query.type;
-    const users = await User.find({ interest: type });
+    const users = await User.find({ interest: filterInterest(req) });
 
     if (!users.length) {
       res.status(200).json({
@@ -77,6 +94,46 @@ exports.searchByUserName = async (req, res, next) => {
 
     res.status(200).json({
       result: users.length,
+      data: {
+        users,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+exports.matchUserWithinRange = async (req, res) => {
+  try {
+    const { distance, latlng, unit } = req.params;
+    const [latitude, longitude] = latlng.split(',');
+    const type = req.query.type;
+
+    let radius;
+    if (unit === 'mi') radius = distance / 3963.2;
+    else if (unit === 'km') radius = distance / 6378.1;
+
+    let queryObject = {
+      location: {
+        $geoWithin: {
+          $centerSphere: [[longitude, latitude], radius],
+        },
+      },
+    };
+
+    if (type)
+      queryObject = Object.assign(
+        { interest: filterInterest(req) },
+        queryObject
+      );
+    const users = await User.find(queryObject);
+
+    res.status(200).json({
+      status: 'success',
+      results: users.length,
       data: {
         users,
       },
