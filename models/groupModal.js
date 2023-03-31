@@ -16,24 +16,33 @@ const groupSchema = new mongoose.Schema({
   },
   creator: {
     type: String,
-    unique: true,
     required: [true, "Creator can't be null"],
     validate: [validator.isEmail, 'Please provide a valid email'],
   },
   players: {
     type: [Object],
-    max: 11,
+    validate: {
+      validator: function (array) {
+        const maxSize = this.maxSize || 1;
+        return array.length <= maxSize;
+      },
+      message: (props) =>
+        `Array length must be less than or equal to ${props.maxSize}`,
+    },
   },
   invitationLink: String,
+  type: String,
+  maxSize: Number,
 });
 
 groupSchema.pre('save', function (next) {
-  const randomString = crypto.randomBytes(32).toString('hex');
+  const randomString = crypto.randomBytes(16).toString('hex');
 
-  this.invitationLink = crypto
-    .createHash('sha256')
-    .update(randomString)
-    .digest('hex');
+  if (!this.invitationLink)
+    this.invitationLink = crypto
+      .createHash('sha256')
+      .update(randomString)
+      .digest('hex');
 
   next();
 });
