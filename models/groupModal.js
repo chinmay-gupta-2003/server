@@ -21,7 +21,7 @@ const groupSchema = new mongoose.Schema({
     validate: [validator.isEmail, 'Please provide a valid email'],
   },
   players: {
-    type: [String],
+    type: [Object],
     max: 11,
   },
   invitationLink: String,
