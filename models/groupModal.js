@@ -29,7 +29,6 @@ const groupSchema = new mongoose.Schema({
 
 groupSchema.pre('save', function (next) {
   const randomString = crypto.randomBytes(32).toString('hex');
-  console.log(randomString);
 
   this.invitationLink = crypto
     .createHash('sha256')
