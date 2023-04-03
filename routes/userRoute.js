@@ -7,6 +7,7 @@ const {
   editProfile,
   addRemoveFriend,
   matchUserWithinRange,
+  getUser,
 } = require('../controllers/userController');
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router
   .route('/users-within/:distance/center/:latlng/unit/:unit')
   .get(matchUserWithinRange);
 router.route('/').post(createUser).get(getAllUsers);
+router.route('/:email').post(getUser);
 router.route('/interests').get(searchByInterest);
 router.route('/editprofile/:id').put(editProfile);
 router.route('/:username').get(searchByUserName);
