@@ -38,6 +38,25 @@ exports.getAllGroups = async (req, res) => {
   }
 };
 
+exports.getSpecificGroup = async (req, res) => {
+  try {
+    const groups = await Group.find({ type: req.params.type });
+
+    res.status(200).json({
+      status: 'success',
+      results: groups.length,
+      data: {
+        groups,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
 exports.addUserToGroup = async (req, res) => {
   try {
     const group = await Group.find({
