@@ -26,8 +26,12 @@ const userSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
-  photo: String,
+  image: String,
   interest: Array,
+  password: {
+    type: String,
+    required: true,
+  },
   location: {
     type: {
       type: String,
