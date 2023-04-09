@@ -5,6 +5,7 @@ const validator = require('validator');
 const groupSchema = new mongoose.Schema({
   name: {
     type: String,
+    unique: true,
     minlength: [6, 'A  name must have more or equal then 6 characters'],
     maxlength: [40, 'A  name must have less or equal then 40 characters'],
     required: true,
@@ -13,6 +14,11 @@ const groupSchema = new mongoose.Schema({
     type: String,
     minlength: [6, 'A  name must have more or equal then 6 characters'],
     maxlength: [20, 'A  name must have less or equal then 20 characters'],
+  },
+  desc: {
+    type: String,
+    minlength: [10, 'Description must have more or equal then 10 characters'],
+    maxlength: [40, 'Description have less or equal then 40 characters'],
   },
   creator: {
     type: String,

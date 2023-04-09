@@ -56,13 +56,14 @@ exports.editProfile = async (req, res) => {
   }
 };
 
-exports.getUser= async (req,res) =>{
-  try{
-    const user = await User.find({email:req.params.email});
-    if(!user){
+exports.getUser = async (req, res) => {
+  try {
+    const user = await User.find({ _id: req.params.id });
+    console.log(user[0]);
+    if (!user) {
       res.status(200).json({
-        message:'No user found'
-      })
+        message: 'No user found',
+      });
     }
     res.status(200).json({
       status: 'success',
@@ -70,14 +71,13 @@ exports.getUser= async (req,res) =>{
         user,
       },
     });
-  }
-  catch (err) {
+  } catch (err) {
     res.status(404).json({
       status: 'fail',
       message: err.message,
     });
   }
-}
+};
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -87,6 +87,39 @@ exports.getAllUsers = async (req, res) => {
       results: users.length,
       data: {
         users,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+exports.setLocation = async (req, res, next) => {
+  try {
+    const user = await User.findOneAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      {
+        $set: {
+          location: {
+            type: 'Point',
+            coordinates: [req.body.longitude, req.body.latitude],
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user,
       },
     });
   } catch (err) {
@@ -175,6 +208,28 @@ exports.addRemoveFriend = async (req, res, next) => {
       : 'Friends Removed Succesfully';
 
     res.status(200).json({ msgg });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+exports.getUserFriends = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    const friendIds = user.friends;
+    const friends = await User.find({ _id: { $in: friendIds } });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        friends,
+      },
+    });
   } catch (err) {
     res.status(404).json({
       status: 'fail',

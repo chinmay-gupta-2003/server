@@ -20,6 +20,24 @@ exports.addPost = async (req, res) => {
     });
   }
 };
+exports.getAllPosts = async (req, res) => {
+  try {
+    const posts = await postModel.find();
+    res.status(200).json({
+      status: 'success',
+      results: posts.length,
+      data: {
+        posts,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
 exports.editPost = async (req, res) => {
   try {
     console.log(req.params.id);
