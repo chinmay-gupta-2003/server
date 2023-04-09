@@ -2,6 +2,7 @@ const postModel = require('../models/postModel.js');
 const mongoose = require('mongoose');
 
 exports.addPost = async (req, res) => {
+  console.log(req.file.path);
   try {
     const newPost = await postModel.create({
       ...req.body,

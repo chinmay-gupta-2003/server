@@ -44,12 +44,11 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  console.log(req.body);
   try {
     const user = await User.findOne({ userName: req.body.userName });
     console.log(user);
     if (!user) {
-      return res.status(404).json({
+      res.status(404).json({
         status: 'fail',
         message: 'User not found',
       });
@@ -57,22 +56,26 @@ exports.login = async (req, res) => {
 
     const isPassword = await bcrypt.compare(req.body.password, user.password);
     if (!isPassword) {
-      return res.status(400).json({
+      res.status(400).json({
         status: 'fail',
         message: 'Password is incorrect',
       });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT);
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT
+    );
+    const { password, isAdmin, ...otherDetails } = user._doc;
 
     res.cookie('token', token);
-    return res.status(200).json({
+    res.status(200).json({
       status: 'success',
       message: 'User has been logged in!',
       user: user,
     });
   } catch (err) {
-    return res.status(400).json({
+    res.status(400).json({
       status: 'fail',
       message: err.message,
     });

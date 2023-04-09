@@ -53,7 +53,8 @@ exports.getGroupAllMembers = async (req, res) => {
 
 exports.getGroupById = async (req, res) => {
   try {
-    const group = await Group.find({ _id: req.params.id });
+    const group = await Group.findById(req.params.id);
+    console.log(group);
     if (!group) {
       return res.status(404).json({
         status: 'fail',
@@ -93,11 +94,13 @@ exports.getSpecificGroup = async (req, res) => {
   }
 };
 
-exports.getGroupByInvitationLink= async (req,res) =>{
-  try{
-    const group = await Group.find({invitationLink: req.params.invitationLink});
+exports.getGroupByInvitationLink = async (req, res) => {
+  try {
+    const group = await Group.find({
+      invitationLink: req.params.invitationLink,
+    });
 
-    if(!group){
+    if (!group) {
       return res.status(404).json({
         status: 'fail',
         message: 'No group found with that link',
@@ -108,15 +111,14 @@ exports.getGroupByInvitationLink= async (req,res) =>{
       data: {
         group,
       },
-    })
-  }
-  catch(err){
+    });
+  } catch (err) {
     res.status(404).json({
       status: 'fail',
       message: err.message,
     });
   }
-}
+};
 
 exports.addUserToGroup = async (req, res) => {
   try {
@@ -132,7 +134,7 @@ exports.addUserToGroup = async (req, res) => {
       });
     }
 
-    if(group[0].players.includes(req.params.id)) { 
+    if (group[0].players.includes(req.params.id)) {
       return res.status(400).json({
         status: 'fail',
         message: 'User already in group',
