@@ -1,12 +1,15 @@
 const postModel = require('../models/postModel.js');
 const mongoose = require('mongoose');
+const cloudinary = require('../utils/cloudinaryConfig');
 
 exports.addPost = async (req, res) => {
-  console.log(req.file.path);
+  console.log(req.file);
   try {
+    const image = await cloudinary.uploader.upload(req.file.path);
     const newPost = await postModel.create({
       ...req.body,
-      image: req.file.path,
+      image: image.secure_url,
+      cloudinary_id: image.public_id,
     });
     res.status(201).json({
       status: 'success',
@@ -60,6 +63,28 @@ exports.editPost = async (req, res) => {
       status: 'success',
       data: {
         post: updatedPost,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+exports.getUserposts = async (req, res) => {
+  try {
+    const posts = await postModel.find({ user: req.params.id });
+    if (!posts) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'No posts found',
+      });
+    }
+    res.status(200).json({
+      status: 'success',
+      data: {
+        posts,
       },
     });
   } catch (err) {

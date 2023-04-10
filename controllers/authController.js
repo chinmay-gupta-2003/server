@@ -3,6 +3,7 @@ const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
+const cloudinary = require('../utils/cloudinaryConfig');
 
 dotenv.config();
 
@@ -10,13 +11,15 @@ exports.register = async (req, res) => {
   try {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
+    const image = await cloudinary.uploader.upload(req.file.path);
     const newUser = new User({
       name: req.body.name,
       userName: req.body.userName,
       email: req.body.email,
       friends: [],
       password: hash,
-      image: req.file.path,
+      image: image.secure_url,
+      cloudinary_id: image.public_id,
       interest: [],
       location: {
         type: 'Point',
@@ -27,7 +30,6 @@ exports.register = async (req, res) => {
     let token = '';
     if (newUser) {
       token = jwt.sign({ id: newUser._id }, process.env.JWT);
-      console.log('Token');
       res.cookie('token', token);
     }
     res.status(200).json({

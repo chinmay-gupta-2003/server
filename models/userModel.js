@@ -40,6 +40,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  cloudinary_id: String,
   location: {
     type: {
       type: String,

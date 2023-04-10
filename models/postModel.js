@@ -18,6 +18,10 @@ const postSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    cloudinary_id: {
+      type: String,
+      required: true,
+    },
     date: {
       type: Date,
       required: true,
