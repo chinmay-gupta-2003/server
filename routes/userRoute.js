@@ -10,6 +10,10 @@ const {
   getUser,
   setLocation,
   getUserFriends,
+  sendRequest,
+  acceptRequest,
+  cancelRequest,
+  removeFriend,
 } = require('../controllers/userController');
 const router = express.Router();
 
@@ -22,7 +26,11 @@ router.route('/interests').get(searchByInterest);
 router.route('/setlocation/:id').patch(setLocation);
 router.route('/editprofile/:id').patch(editProfile);
 router.route('/:username').get(searchByUserName);
-router.patch('/:id/:friendId', addRemoveFriend);
-router.get('/getuserfriends/:id', getUserFriends);
+// router.patch('/:id/:friendId', addRemoveFriend);
+router.route('/sendrequest/:id/:friendId').patch(sendRequest);
+router.route('/acceptrequest/:id/:friendId').patch(acceptRequest);
+router.route('/cancelrequest/:id/:friendId').patch(cancelRequest);
+router.route('/removefriend/:id/:friendId').patch(removeFriend);
+router.route('/getuserfriends/:id').get(getUserFriends);
 
 module.exports = router;

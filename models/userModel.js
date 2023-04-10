@@ -26,6 +26,14 @@ const userSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  getRequests: {
+    type: Array,
+    default: [],
+  },
+  sentRequests: {
+    type: Array,
+    default: [],
+  },
   image: String,
   interest: Array,
   password: {

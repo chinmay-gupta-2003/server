@@ -184,6 +184,117 @@ exports.searchByUserName = async (req, res, next) => {
 };
 
 // Friends
+exports.sendRequest = async (req, res, next) => {
+  try {
+    const { id, friendId } = req.params;
+    const response = await User.findByIdAndUpdate(
+      id,
+      {
+        $push: {
+          sentRequests: friendId,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({
+      status: 'success',
+      data: {
+        response,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+exports.acceptRequest = async (req, res, next) => {
+  try {
+    const { id, friendId } = req.params;
+    const response = await User.findByIdAndUpdate(
+      id,
+      {
+        $pull: {
+          sentRequests: friendId,
+        },
+        $push: {
+          friends: friendId,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({
+      status: 'success',
+      data: {
+        response,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+exports.cancelRequest = async (req, res, next) => {
+  try {
+    const { id, friendId } = req.params;
+    const response = await User.findByIdAndUpdate(
+      id,
+      {
+        $pull: {
+          sentRequests: friendId,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({
+      status: 'success',
+      data: {
+        response,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+exports.removeFriend = async (req, res, next) => {
+  try {
+    const { id, friendId } = req.params;
+    const response = await User.findByIdAndUpdate(
+      id,
+      {
+        $pull: {
+          friends: friendId,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({
+      status: 'success',
+      data: {
+        response,
+      },
+    });
+  } catch (err) {
+    es.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
 
 exports.addRemoveFriend = async (req, res, next) => {
   try {
@@ -203,11 +314,11 @@ exports.addRemoveFriend = async (req, res, next) => {
     }
     await user.save();
     await friend.save();
-    const msgg = frnd
+    const msg = frnd
       ? 'Friends added successfully'
       : 'Friends Removed Succesfully';
 
-    res.status(200).json({ msgg });
+    res.status(200).json({ msg });
   } catch (err) {
     res.status(404).json({
       status: 'fail',
