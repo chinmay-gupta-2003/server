@@ -1,10 +1,18 @@
 const Group = require('../models/groupModal');
 const User = require('../models/userModel');
+const cloudinary = require('../utils/cloudinaryConfig');
 
-exports.createGroup = async (req, res) => {
+exports.
+createGroup = async (req, res) => {
+  console.log(req.body);
   try {
-    const group = await Group.create(req.body);
-
+    const image = await cloudinary.uploader.upload(req.file.path);
+    const group = await Group.create({
+      ...req.body,
+      image: image.secure_url,
+      cloudinary_id: image.public_id,
+    });
+    console.log(group);
     res.status(201).json({
       status: 'success',
       data: {
@@ -145,6 +153,56 @@ exports.addUserToGroup = async (req, res) => {
     await group[0].save();
 
     res.status(201).json({
+      status: 'success',
+      data: {
+        group,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+exports.playMatch = async (req, res) => {
+  //change the status of the group to playing
+  try {
+    const { id } = req.params;
+    const group = await Group.findByIdAndUpdate(
+      id,
+      { status: 'open' },
+      {
+        $new: true,
+      }
+    );
+    res.status(200).json({
+      status: 'success',
+      data: {
+        group,
+      },
+    });
+  } catch (err) {
+    es.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+exports.findmatch = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const requestingRoom = await Group.findById(id);
+    const requestUser = await User.find({ email: requestingRoom.creator });
+    const groups = await Group.find({
+      type: requestingRoom.type,
+      status: 'open',
+      creator: { $ne: requestingRoom.creator },
+    });
+    // if no groups found
+    res.status(200).json({
       status: 'success',
       data: {
         group,

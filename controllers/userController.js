@@ -198,6 +198,17 @@ exports.sendRequest = async (req, res, next) => {
         new: true,
       }
     );
+    const oppositeUser = await User.findByIdAndUpdate(
+      friendId,
+      {
+        $push: {
+          getRequests: id,
+        },
+      },
+      {
+        new: true,
+      }
+    );
     res.status(200).json({
       status: 'success',
       data: {
@@ -218,10 +229,24 @@ exports.acceptRequest = async (req, res, next) => {
       id,
       {
         $pull: {
-          sentRequests: friendId,
+          getRequests: friendId,
         },
         $push: {
           friends: friendId,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    const friendResponse = await User.findByIdAndUpdate(
+      friendId,
+      {
+        $pull: {
+          sentRequests: id,
+        },
+        $push: {
+          friends: id,
         },
       },
       {
@@ -255,6 +280,17 @@ exports.cancelRequest = async (req, res, next) => {
         new: true,
       }
     );
+    const friendRes = await User.findByIdAndUpdate(
+      friendId,
+      {
+        $pull: {
+          getRequests: id,
+        },
+      },
+      {
+        new: true,
+      }
+    );
     res.status(200).json({
       status: 'success',
       data: {
@@ -276,6 +312,17 @@ exports.removeFriend = async (req, res, next) => {
       {
         $pull: {
           friends: friendId,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    const friendRes = await User.findByIdAndUpdate(
+      friendId,
+      {
+        $pull: {
+          friends: id,
         },
       },
       {

@@ -36,6 +36,20 @@ const groupSchema = new mongoose.Schema({
         `Array length must be less than or equal to ${props.maxSize}`,
     },
   },
+  image: {
+    type: String,
+    default: '',
+  },
+  cloudinary_id: {
+    type: String,
+    required: true,
+  },
+  status: {
+    //type enum
+    type: String,
+    enum: ['open', 'closed', 'In a match'],
+    default: 'closed',
+  },
   invitationLink: String,
   type: String,
   maxSize: Number,

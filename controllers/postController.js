@@ -1,4 +1,5 @@
 const postModel = require('../models/postModel.js');
+const userModel = require('../models/userModel.js');
 const mongoose = require('mongoose');
 const cloudinary = require('../utils/cloudinaryConfig');
 
@@ -81,6 +82,39 @@ exports.getUserposts = async (req, res) => {
         message: 'No posts found',
       });
     }
+    res.status(200).json({
+      status: 'success',
+      data: {
+        posts,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+exports.getfriendsPosts = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.params.id);
+    const friends = user.friends;
+    let posts;
+
+    if (!friends) {
+      res.status(200).json({
+        status: 'success',
+        data: {
+          posts,
+        },
+      });
+      return;
+    }
+
+    posts = await postModel.find({
+      $or: [{ userId: req.params.id }, { userId: { $in: friends } }],
+    });
+
     res.status(200).json({
       status: 'success',
       data: {
