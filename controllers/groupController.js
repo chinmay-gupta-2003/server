@@ -2,11 +2,12 @@ const Group = require('../models/groupModal');
 const User = require('../models/userModel');
 const cloudinary = require('../utils/cloudinaryConfig');
 
-exports.
-createGroup = async (req, res) => {
+exports.createGroup = async (req, res) => {
   console.log(req.body);
   try {
+    console.log('Hi');
     const image = await cloudinary.uploader.upload(req.file.path);
+    console.log(image);
     const group = await Group.create({
       ...req.body,
       image: image.secure_url,
@@ -20,6 +21,7 @@ createGroup = async (req, res) => {
       },
     });
   } catch (err) {
+    console.error(err);
     res.status(400).json({
       status: 'fail',
       message: err.message,
@@ -206,6 +208,46 @@ exports.findmatch = async (req, res) => {
       status: 'success',
       data: {
         group,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+exports.deleteGroup = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deleteGroup = await Group.findByIdAndDelete(id);
+    res.status(200).json({
+      status: 'success',
+      data: {
+        deleteGroup,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+exports.leaveGroup = async (req, res, next) => {
+  try {
+    const { id, userId } = req.params;
+    const updatedGroup = await Group.findByIdAndUpdate(
+      id,
+      { $pull: { players: userId } },
+      { new: true }
+    );
+    res.status(200).json({
+      status: 'success',
+      data: {
+        group: updatedGroup,
       },
     });
   } catch (err) {
