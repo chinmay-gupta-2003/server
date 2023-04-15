@@ -50,6 +50,10 @@ const groupSchema = new mongoose.Schema({
     enum: ['open', 'closed', 'In a match'],
     default: 'closed',
   },
+  roomId: {
+    type: String,
+    default: '',
+  },
   invitationLink: String,
   type: String,
   maxSize: Number,

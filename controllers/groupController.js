@@ -257,3 +257,29 @@ exports.leaveGroup = async (req, res, next) => {
     });
   }
 };
+
+exports.addRoomId = async (req,res) => {
+  try {
+    const { roomId, id } = req.params;
+    const updatedGroup = await Group.findByIdAndUpdate(
+      id,
+      {
+        roomId: roomId,
+      },
+      {
+        $new: true,
+      }
+    );
+    res.status(200).json({
+      status: 'success',
+      data: {
+        group: updatedGroup,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};

@@ -10,6 +10,7 @@ const {
   playMatch,
   deleteGroup,
   leaveGroup,
+  addRoomId,
 } = require('../controllers/groupController');
 const upload = require('../utils/multerConfig');
 
@@ -26,5 +27,6 @@ router.route('/group/:id').get(getGroupById);
 router.route('/changestatustoopen/:id').post(playMatch);
 router.route('/deletegroup/:id').post(deleteGroup);
 router.route('/leavegroup/:id/:userId').post(leaveGroup);
+router.route('/addroomid/:id/:roomId').post(addRoomId);
 
 module.exports = router;
