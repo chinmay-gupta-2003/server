@@ -38,6 +38,10 @@ const userSchema = new mongoose.Schema({
   interest: Array,
   password: {
     type: String,
+    validate: [
+      validator.isStrongPassword,
+      'Please provide a strong password with minimum 8 characters and 1 small letter , 1 capital letter , 1 number and 1 special symbol!',
+    ],
     required: true,
   },
   cloudinary_id: String,

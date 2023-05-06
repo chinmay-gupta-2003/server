@@ -14,6 +14,7 @@ const {
   acceptRequest,
   cancelRequest,
   removeFriend,
+  searchByEmail,
 } = require('../controllers/userController');
 const router = express.Router();
 
@@ -26,6 +27,7 @@ router.route('/interests').get(searchByInterest);
 router.route('/setlocation/:id').patch(setLocation);
 router.route('/editprofile/:id').patch(editProfile);
 router.route('/:username').get(searchByUserName);
+router.route('/:email').get(searchByEmail);
 // router.patch('/:id/:friendId', addRemoveFriend);
 router.route('/sendrequest/:id/:friendId').patch(sendRequest);
 router.route('/acceptrequest/:id/:friendId').patch(acceptRequest);

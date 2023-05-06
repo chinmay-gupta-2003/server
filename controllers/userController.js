@@ -183,6 +183,32 @@ exports.searchByUserName = async (req, res, next) => {
   }
 };
 
+exports.searchByEmail = async (req, res, next) => {
+  try {
+    const { email } = req.params;
+    const users = await User.find({ email: email });
+
+    if (!users.length) {
+      res.status(200).json({
+        message: 'No user found!',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      result: users.length,
+      data: {
+        users,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
 // Friends
 exports.sendRequest = async (req, res, next) => {
   try {
