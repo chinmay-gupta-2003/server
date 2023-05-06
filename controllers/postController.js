@@ -128,3 +128,18 @@ exports.getfriendsPosts = async (req, res) => {
     });
   }
 };
+exports.deletePost = async (req, res) => {
+  try {
+    const post = await postModel.findByIdAndDelete(req.params.id);
+    await cloudinary.uploader.destroy(post.cloudinary_id);
+    res.status(200).json({
+      status: 'success',
+      message: 'Post deleted successfully',
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
