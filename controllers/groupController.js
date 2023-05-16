@@ -283,3 +283,29 @@ exports.addRoomId = async (req,res) => {
     });
   }
 };
+
+exports.changeGroupVisibility = async (req, res) => {
+  try{
+    const { id } = req.params;
+    const group = await Group.findById(id);
+    if(group.visibility === 'Public'){
+      group.visibility = 'Private';
+    }
+    else{
+      group.visibility = 'Public';
+    }
+    await group.save();
+    res.status(200).json({
+      status: 'success',
+      data: {
+        group,
+      },
+    });
+  }
+  catch(err){
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+} 

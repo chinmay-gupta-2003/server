@@ -18,7 +18,7 @@ const groupSchema = new mongoose.Schema({
   desc: {
     type: String,
     minlength: [10, 'Description must have more or equal then 10 characters'],
-    maxlength: [40, 'Description have less or equal then 40 characters'],
+    maxlength: [90, 'Description have less or equal then 40 characters'],
   },
   creator: {
     type: String,
@@ -53,6 +53,10 @@ const groupSchema = new mongoose.Schema({
   roomId: {
     type: String,
     default: '',
+  },
+  visibility:{
+    type: String,
+    enum: ['Public', 'Private'],
   },
   invitationLink: String,
   type: String,
