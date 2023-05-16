@@ -56,6 +56,9 @@ const userSchema = new mongoose.Schema({
       default: [0, 0],
     },
   },
+  invitations:{
+    type: [String]
+  }
 });
 
 const User = mongoose.model('User', userSchema);

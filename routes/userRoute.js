@@ -15,6 +15,7 @@ const {
   cancelRequest,
   removeFriend,
   searchByEmail,
+  acceptInvitation,
 } = require('../controllers/userController');
 const router = express.Router();
 
@@ -34,5 +35,6 @@ router.route('/acceptrequest/:id/:friendId').patch(acceptRequest);
 router.route('/cancelrequest/:id/:friendId').patch(cancelRequest);
 router.route('/removefriend/:id/:friendId').patch(removeFriend);
 router.route('/getuserfriends/:id').get(getUserFriends);
+router.route('/acceptinvitation/:groupId/:userId').post(acceptInvitation);
 
 module.exports = router;

@@ -309,3 +309,50 @@ exports.changeGroupVisibility = async (req, res) => {
     });
   }
 } 
+
+exports.sendInviteToUser = async (req, res) => {
+  try {
+    const { groupId, userId } = req.params;
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Group not found',
+      });
+    }
+
+    if (group.invitations.includes(userId)) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'User already invited',
+      });
+    }
+
+    group.invitations.push(userId);
+    await group.save();
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'User not found',
+      });
+    }
+
+    user.invitations.push(groupId);
+    await user.save();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Invitation sent!',
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+

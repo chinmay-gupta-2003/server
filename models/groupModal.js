@@ -58,6 +58,9 @@ const groupSchema = new mongoose.Schema({
     type: String,
     enum: ['Public', 'Private'],
   },
+  invitations:{
+    type: [String]
+  },
   invitationLink: String,
   type: String,
   maxSize: Number,
