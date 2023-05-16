@@ -46,20 +46,61 @@ exports.register = async (req, res) => {
   }
 };
 
+// exports.login = async (req, res) => {
+//   try {
+//     const user = await User.findOne({ userName: req.body.userName });
+//     console.log(user);
+//     if (!user) {
+//       res.status(404).json({
+//         status: 'fail',
+//         message: 'User not found',
+//       });
+//     }
+
+//     const isPassword = await bcrypt.compare(req.body.password, user.password);
+//     if (!isPassword) {
+//       res.status(400).json({
+//         status: 'fail',
+//         message: 'Password is incorrect',
+//       });
+//     }
+
+//     const token = jwt.sign(
+//       { id: user._id, isAdmin: user.isAdmin },
+//       process.env.JWT
+//     );
+//     const { password, isAdmin, ...otherDetails } = user._doc;
+
+//     res.cookie('token', token);
+//     res.status(200).json({
+//       status: 'success',
+//       message: 'User has been logged in!',
+//       user: user,
+//     });
+//   } catch (err) {
+//     res.status(400).json({
+//       status: 'fail',
+//       message: err.message,
+//     });
+//   }
+// };
 exports.login = async (req, res) => {
   try {
     const user = await User.findOne({ userName: req.body.userName });
-    console.log(user);
+
     if (!user) {
-      res.status(404).json({
+      return res.status(404).json({
         status: 'fail',
         message: 'User not found',
       });
     }
 
-    const isPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!isPassword) {
-      res.status(400).json({
+    const isPasswordCorrect = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!isPasswordCorrect) {
+      return res.status(400).json({
         status: 'fail',
         message: 'Password is incorrect',
       });
@@ -77,10 +118,10 @@ exports.login = async (req, res) => {
       message: 'User has been logged in!',
       user: user,
     });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err.message,
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
     });
   }
 };

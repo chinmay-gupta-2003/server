@@ -1,4 +1,5 @@
 const User = require('../models/userModel');
+const Group = require('../models/groupModal');
 
 const filterInterest = (req) => {
   let typeArray, interestObject;
@@ -457,6 +458,62 @@ exports.matchUserWithinRange = async (req, res) => {
     });
   } catch (err) {
     res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+exports.acceptInvitation = async (req, res) => {
+  try {
+    const { groupId, userId } = req.params;
+
+    const group = await Group.findById(groupId);
+    if (!group) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Group not found',
+      });
+    }
+
+    if (!group.invitations.includes(userId)) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Invitation not found',
+      });
+    }
+
+    // Remove the userId from invitations array
+    group.invitations = group.invitations.filter(
+      (invitedId) => invitedId !== userId
+    );
+
+    // Add userId to players array
+    group.players.push(userId);
+
+    await group.save();
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'User not found',
+      });
+    }
+
+    // Remove the groupId from invitations array
+    user.invitations = user.invitations.filter(
+      (invitedGroupId) => invitedGroupId !== groupId
+    );
+
+    await user.save();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Invitation accepted!',
+    });
+  } catch (err) {
+    res.status(400).json({
       status: 'fail',
       message: err.message,
     });
