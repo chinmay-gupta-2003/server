@@ -4,7 +4,7 @@ const authRouter = require('./routes/authRoute');
 const groupRouter = require('./routes/groupRoutes');
 const messageRouter = require('./routes/messages');
 const bodyParser = require('body-parser');
-const socketIO = require("socket.io");
+const socketIO = require('socket.io');
 let cors = require('cors');
 
 const morgan = require('morgan');
@@ -17,8 +17,6 @@ app.use('/uploads', express.static('uploads'));
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10kb' }));
 
-
-
 // const http = require('http');
 
 // const server=http.createServer(app);
@@ -28,10 +26,6 @@ app.use(express.json({ limit: '10kb' }));
 // io.on('connection', () => {
 //     console.log('a user connected');
 // });
-
-
-
-
 
 app.use('/api/auth/', authRouter);
 app.use('/api/users/', userRouter);
