@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = require('./app');
 
+const Message = require('./models/message');
+
 process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
   console.log(err.name, err.message);
@@ -21,6 +23,40 @@ mongoose
 const port = process.env.PORT || 4000;
 const server = app.listen(port, () => {
   console.log(`Listening to port ${port}`);
+});
+
+
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "*",
+    // credentials: true,
+  },
+});
+
+
+const NEW_CHAT_MESSAGE_EVENT = "newChatMessage";
+io.on("connection", (socket) => {
+  console.log(`Client ${socket.id} connected`);
+  const { roomId } = socket.handshake.query;
+  socket.join(roomId);
+ // fetch message from database and emit to client
+
+  
+  socket.on(NEW_CHAT_MESSAGE_EVENT, async (data) => {
+    //fetch message from database and emit to client
+    console.log(data.body+" from frontend");
+    console.log(data.senderId+" from frontend");
+    await Message.create({messages:data.body,senderId:data.senderId,roomId:data.roomId,name:data.name});
+    io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, data);
+  });
+ 
+ 
+  socket.on("disconnect", () => {
+    console.log(`Client ${socket.id} diconnected`);
+    socket.leave(roomId);
+  });
+
 });
 
 process.on('unhandledRejection', (err) => {
