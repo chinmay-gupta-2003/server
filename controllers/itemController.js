@@ -1,0 +1,24 @@
+const Item = require('../models/itemModel');
+const cloudinary = require('../utils/cloudinaryConfig');
+
+exports.addItem = async (req, res) => {
+    try {
+        const image = await cloudinary.uploader.upload(req.file.path);
+        const newItem = await Item.create({
+        ...req.body,
+        imageurl: image.secure_url,
+        cloudId: image.public_id,
+        });
+        res.status(201).json({
+        status: 'success',
+        data: {
+            item: newItem,
+        },
+        });
+    } catch (err) {
+        res.status(400).json({
+        status: 'fail',
+        message: err.message,
+        });
+    }    
+};

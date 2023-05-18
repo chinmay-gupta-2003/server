@@ -3,6 +3,7 @@ const postRouter = require('./routes/postRoute');
 const authRouter = require('./routes/authRoute');
 const groupRouter = require('./routes/groupRoutes');
 const messageRouter = require('./routes/messages');
+const addItem = require('./routes/itemRoute');
 const bodyParser = require('body-parser');
 const socketIO = require("socket.io");
 let cors = require('cors');
@@ -38,5 +39,6 @@ app.use('/api/users/', userRouter);
 app.use('/api/posts/', postRouter);
 app.use('/api/groups/', groupRouter);
 app.use('/api/messages/', messageRouter);
+app.use('/api/items/', addItem);
 
 module.exports = app;
