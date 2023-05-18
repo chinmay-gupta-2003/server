@@ -38,11 +38,16 @@ const userSchema = new mongoose.Schema({
   interest: Array,
   password: {
     type: String,
-    validate: [
-      validator.isStrongPassword,
-      'Please provide a strong password with minimum 8 characters and 1 small letter , 1 capital letter , 1 number and 1 special symbol!',
-    ],
     required: true,
+    validate: {
+      validator: function (value) {
+        const regex =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return regex.test(value);
+      },
+      message:
+        'Please provide a strong password with a minimum of 8 characters, including at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special symbol.',
+    },
   },
   cloudinary_id: String,
   location: {
@@ -56,9 +61,9 @@ const userSchema = new mongoose.Schema({
       default: [0, 0],
     },
   },
-  invitations:{
-    type: [String]
-  }
+  invitations: {
+    type: [String],
+  },
 });
 
 const User = mongoose.model('User', userSchema);

@@ -9,24 +9,45 @@ dotenv.config();
 
 exports.register = async (req, res) => {
   try {
+    const existingUser = await User.findOne({
+      $or: [{ userName: req.body.userName }, { email: req.body.email }],
+    });
+
+    if (existingUser) {
+      return res.status(409).json({
+        status: 'fail',
+        message: 'User with the same username or email already exists',
+      });
+    }
+
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
-    const image = await cloudinary.uploader.upload(req.file.path);
-    const newUser = new User({
-      name: req.body.name,
-      userName: req.body.userName,
-      email: req.body.email,
-      friends: [],
-      password: hash,
-      image: image.secure_url,
-      cloudinary_id: image.public_id,
-      interest: [],
-      location: {
-        type: 'Point',
-        coordinates: [req.body.latitude, req.body.longitude],
-      },
-    });
-    await newUser.save();
+
+    // try {
+      const image = await cloudinary.uploader.upload(req.file.path);
+      const newUser = new User({
+        name: req.body.name,
+        userName: req.body.userName,
+        email: req.body.email,
+        friends: [],
+        password: hash,
+        image: image.secure_url,
+        cloudinary_id: image.public_id,
+        interest: [],
+        location: {
+          type: 'Point',
+          coordinates: [req.body.latitude, req.body.longitude],
+        },
+      });
+      await newUser.save();
+    // } catch (uploadError) {
+    //   // Handle image upload error
+    //   return res.status(500).json({
+    //     status: 'error',
+    //     message: 'Error occurred while uploading the image',
+    //   });
+    // }
+
     let token = '';
     if (newUser) {
       token = jwt.sign({ id: newUser._id }, process.env.JWT);
@@ -39,8 +60,8 @@ exports.register = async (req, res) => {
       token: token,
     });
   } catch (err) {
-    res.status(400).json({
-      status: 'fail',
+    res.status(500).json({
+      status: 'error',
       message: err.message,
     });
   }
