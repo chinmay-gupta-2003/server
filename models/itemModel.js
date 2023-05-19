@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const ItemSchema = new mongoose.Schema(
   {
-    name: {
+    itemname: {
       type: String,
       required: true,
     },
@@ -11,6 +11,11 @@ const ItemSchema = new mongoose.Schema(
     },
     userId: {
       type: String,
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
     },
     price: {
       type: Number,
@@ -18,7 +23,7 @@ const ItemSchema = new mongoose.Schema(
     },
     isSold: {
       type: Boolean,
-      required: true,
+      default: false,
     },
     imageurl: {
       type: String,

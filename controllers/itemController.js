@@ -22,3 +22,20 @@ exports.addItem = async (req, res) => {
         });
     }    
 };
+
+exports.getItems = async (req, res) => {    
+    try {
+        const items = await Item.find();
+        res.status(200).json({
+        status: 'success',
+        data: {
+            items,
+        },
+        });
+    } catch (err) {
+        res.status(400).json({
+        status: 'fail',
+        message: err.message,
+        });
+    }
+}
