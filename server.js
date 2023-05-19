@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = require('./app');
-
 const Message = require('./models/message');
 
 process.on('uncaughtException', (err) => {
@@ -24,6 +23,15 @@ const port = process.env.PORT || 4000;
 const server = app.listen(port, () => {
   console.log(`Listening to port ${port}`);
 });
+
+
+// export const instance = new Razorpay({
+//   key_id: process.env.RAZORPAY_API_KEY,
+//   key_secret: process.env.RAZORPAY_APT_SECRET,
+// });
+
+
+
 
 
 const io = require("socket.io")(server, {
