@@ -6,7 +6,7 @@ exports.addItem = async (req, res) => {
         const image = await cloudinary.uploader.upload(req.file.path);
         const newItem = await Item.create({
         ...req.body,
-        imageurl: image.secure_url,
+        image: image.secure_url,
         cloudId: image.public_id,
         });
         res.status(201).json({
