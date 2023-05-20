@@ -24,47 +24,43 @@ const server = app.listen(port, () => {
   console.log(`Listening to port ${port}`);
 });
 
-
 // export const instance = new Razorpay({
 //   key_id: process.env.RAZORPAY_API_KEY,
 //   key_secret: process.env.RAZORPAY_APT_SECRET,
 // });
 
-
-
-
-
-const io = require("socket.io")(server, {
+const io = require('socket.io')(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "*",
+    origin: '*',
     // credentials: true,
   },
 });
 
-
-const NEW_CHAT_MESSAGE_EVENT = "newChatMessage";
-io.on("connection", (socket) => {
+const NEW_CHAT_MESSAGE_EVENT = 'newChatMessage';
+io.on('connection', (socket) => {
   console.log(`Client ${socket.id} connected`);
   const { roomId } = socket.handshake.query;
   socket.join(roomId);
- // fetch message from database and emit to client
+  // fetch message from database and emit to client
 
-  
   socket.on(NEW_CHAT_MESSAGE_EVENT, async (data) => {
     //fetch message from database and emit to client
-    console.log(data.body+" from frontend");
-    console.log(data.senderId+" from frontend");
-    await Message.create({messages:data.body,senderId:data.senderId,roomId:data.roomId,name:data.name});
+    console.log(data.body + ' from frontend');
+    console.log(data.senderId + ' from frontend');
+    await Message.create({
+      messages: data.body,
+      senderId: data.senderId,
+      roomId: data.roomId,
+      name: data.name,
+    });
     io.in(roomId).emit(NEW_CHAT_MESSAGE_EVENT, data);
   });
- 
- 
-  socket.on("disconnect", () => {
+
+  socket.on('disconnect', () => {
     console.log(`Client ${socket.id} diconnected`);
     socket.leave(roomId);
   });
-
 });
 
 process.on('unhandledRejection', (err) => {
