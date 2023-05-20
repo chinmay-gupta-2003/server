@@ -13,6 +13,7 @@ const {
   addRoomId,
   changeGroupVisibility,
   sendInviteToUser,
+  joinGroup,
 } = require('../controllers/groupController');
 const upload = require('../utils/multerConfig');
 
@@ -27,6 +28,7 @@ router.route('/user/:id/:invitationLink').patch(addUserToGroup);
 router.route('/getgroup/:invitationLink').get(getGroupByInvitationLink);
 router.route('/group/:id').get(getGroupById);
 router.route('/changestatustoopen/:id').post(playMatch);
+router.route('/join/:userId/:roomId').post(joinGroup);
 router.route('/deletegroup/:id').post(deleteGroup);
 router.route('/leavegroup/:id/:userId').post(leaveGroup);
 router.route('/addroomid/:id/:roomId').post(addRoomId);

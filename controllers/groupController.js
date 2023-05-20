@@ -218,6 +218,28 @@ exports.findmatch = async (req, res) => {
   }
 };
 
+exports.joinGroup = async (req, res, next) => {
+  try {
+    const { userId, roomId } = req.params;
+    const joinGroup = await Group.findById(roomId);
+    console.log(joinGroup);
+    joinGroup.players.push(userId);
+    joinGroup.save();
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        joinGroup,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
 exports.deleteGroup = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -258,7 +280,7 @@ exports.leaveGroup = async (req, res, next) => {
   }
 };
 
-exports.addRoomId = async (req,res) => {
+exports.addRoomId = async (req, res) => {
   try {
     const { roomId, id } = req.params;
     const updatedGroup = await Group.findByIdAndUpdate(
@@ -285,13 +307,12 @@ exports.addRoomId = async (req,res) => {
 };
 
 exports.changeGroupVisibility = async (req, res) => {
-  try{
+  try {
     const { id } = req.params;
     const group = await Group.findById(id);
-    if(group.visibility === 'Public'){
+    if (group.visibility === 'Public') {
       group.visibility = 'Private';
-    }
-    else{
+    } else {
       group.visibility = 'Public';
     }
     await group.save();
@@ -301,14 +322,13 @@ exports.changeGroupVisibility = async (req, res) => {
         group,
       },
     });
-  }
-  catch(err){
+  } catch (err) {
     res.status(400).json({
       status: 'fail',
       message: err.message,
     });
   }
-} 
+};
 
 exports.sendInviteToUser = async (req, res) => {
   try {
@@ -355,4 +375,3 @@ exports.sendInviteToUser = async (req, res) => {
     });
   }
 };
-
