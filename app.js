@@ -12,7 +12,6 @@ let cors = require('cors');
 const morgan = require('morgan');
 const express = require('express');
 const app = express();
-
 // app.use(
 //   cors({
 //     origin: 'https://sporty-phy-client.vercel.app/',
