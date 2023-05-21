@@ -13,9 +13,14 @@ const morgan = require('morgan');
 const express = require('express');
 const app = express();
 
+// app.use(
+//   cors({
+//     origin: 'https://sporty-phy-client.vercel.app/',
+//   })
+// );
 app.use(
   cors({
-    origin: 'https://sporty-phy-client.vercel.app/',
+    origin: '*',
   })
 );
 app.use(bodyParser.json());

@@ -1,27 +1,27 @@
-runtime: nodejs18
+# runtime: nodejs18
 
-service: default
+# service: default
 
-handlers:
-  - url: /.*
-    secure: always
-    redirect_http_response_code: 301
-    script: auto
+# handlers:
+#   - url: /.*
+#     secure: always
+#     redirect_http_response_code: 301
+#     script: auto
 
-network:
-  forwarded_ports:
-    - 65000
+# network:
+#   forwarded_ports:
+#     - 65000
 
-# instance_tag: websocket
+# # instance_tag: websocket
 
-env_variables:
-  DATABASE_LOCAL: 'mongodb+srv://ajanshujoshi:ajanshujoshi@cluster0.4cshjcc.mongodb.net/test'
-  PORT: '8000'
-  JWT: 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY4MDg3MjA1MywiaWF0IjoxNjgwODcyMDUzfQ.fQ3jxDmTPI2PDji-8qDVnpEcgkxRfcsRLsTgS0xjXSk'
-  CLOUD_NAME: 'djbbngkho'
-  API_KEY: '128686974774667'
-  API_SECRET: 'q3haJxKMOm_cNqp8_YUPzm05X_Y'
-  RAZORPAY_API_KEY: 'rzp_test_VbALDoHTJgsQhT'
-  RAZORPAY_APT_SECRET: 'kBrqM9ewOAjT3VhxkW3voO3G'
-  EMAIL: 'sportyphy.games.us@gmail.com'
-  PASSWORD: 'gaqlebdyzmmfpkei'
+# env_variables:
+#   DATABASE_LOCAL: 'mongodb+srv://ajanshujoshi:ajanshujoshi@cluster0.4cshjcc.mongodb.net/test'
+#   PORT: '8000'
+#   JWT: 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY4MDg3MjA1MywiaWF0IjoxNjgwODcyMDUzfQ.fQ3jxDmTPI2PDji-8qDVnpEcgkxRfcsRLsTgS0xjXSk'
+#   CLOUD_NAME: 'djbbngkho'
+#   API_KEY: '128686974774667'
+#   API_SECRET: 'q3haJxKMOm_cNqp8_YUPzm05X_Y'
+#   RAZORPAY_API_KEY: 'rzp_test_VbALDoHTJgsQhT'
+#   RAZORPAY_APT_SECRET: 'kBrqM9ewOAjT3VhxkW3voO3G'
+#   EMAIL: 'sportyphy.games.us@gmail.com'
+#   PASSWORD: 'gaqlebdyzmmfpkei'
