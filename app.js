@@ -13,7 +13,11 @@ const morgan = require('morgan');
 const express = require('express');
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: 'https://sporty-phy-client.vercel.app/',
+  })
+);
 app.use(bodyParser.json());
 app.use('/uploads', express.static('uploads'));
 app.use(morgan('dev'));
@@ -35,7 +39,6 @@ app.use('/api/posts/', postRouter);
 app.use('/api/groups/', groupRouter);
 app.use('/api/messages/', messageRouter);
 app.use('/api/items/', addItem);
-app.use("/api/razorpay", paymentRoute);
-
+app.use('/api/razorpay', paymentRoute);
 
 module.exports = app;
