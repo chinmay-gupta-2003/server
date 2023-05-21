@@ -37,6 +37,9 @@ app.use(express.json({ limit: '10kb' }));
 //     console.log('a user connected');
 // });
 
+app.get('/', (req, res) => {
+  res.send('The server is up and running .....');
+});
 app.use('/api/auth/', authRouter);
 app.use('/api/users/', userRouter);
 app.use('/api/posts/', postRouter);
