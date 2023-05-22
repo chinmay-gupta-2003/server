@@ -42,10 +42,8 @@ io.on('connection', (socket) => {
   console.log(`Client ${socket.id} connected`);
   const { roomId } = socket.handshake.query;
   socket.join(roomId);
-  // fetch message from database and emit to client
 
   socket.on(NEW_CHAT_MESSAGE_EVENT, async (data) => {
-    //fetch message from database and emit to client
     console.log(data.body + ' from frontend');
     console.log(data.senderId + ' from frontend');
     await Message.create({

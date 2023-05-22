@@ -27,6 +27,6 @@ exports.checkout = async (req, res) => {
 
 exports.paymentVerification = async (req, res) => {
     res.redirect(
-      `http://localhost:3000/buynsell`
+      process.env.FRONTEND_URL
     );
 };
