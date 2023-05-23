@@ -27,6 +27,6 @@ exports.checkout = async (req, res) => {
 
 exports.paymentVerification = async (req, res) => {
     res.redirect(
-      process.env.FRONTEND_URL
+      "https://ssportyphy-server.el.r.appspot.com/buynsell"
     );
 };
