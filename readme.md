@@ -59,3 +59,26 @@ To start using Sporty-PHY, you will need to run backend. Follow the instructions
    The backend server will be running on the specified port.
 
 ## The Website backend is now ready to run
+
+# NOTE:
+
+### After you are done cloning both client and server, you can add docker-compose.yml file as well in the root directory
+
+```
+version: '3.8'
+services:
+  client:
+    build: ./SportyPHY-client
+    container_name: clientapp_c_c
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+  server:
+    build: ./SportyPHY-server
+    container_name: serverapp_c_c
+    ports:
+      - "8000:8000"
+    stdin_open: true
+    tty: true
+```
